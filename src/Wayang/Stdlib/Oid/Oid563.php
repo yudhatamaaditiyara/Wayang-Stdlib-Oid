@@ -21,6 +21,16 @@ namespace Wayang\Stdlib\Oid;
 class Oid563 extends AbstractOid
 {
 	/**
+	 * @var int
+	 */
+	protected $byteSize = 14;
+	
+	/**
+	 * @var int
+	 */
+	protected $charSize = 28;
+
+	/**
 	 * @var array
 	 */
 	protected static $random;
@@ -29,21 +39,6 @@ class Oid563 extends AbstractOid
 	 * @var int
 	 */
 	protected static $sequence;
-
-	/**
-	 * @var int
-	 */
-	protected static $timeLength = 10;
-
-	/**
-	 * @var int
-	 */
-	protected static $randomLength = 6;
-
-	/**
-	 * @var int
-	 */
-	protected static $sequenceLength = 0xffffff;
 
 	/**
 	 * @param string|OidInterface $id
@@ -62,22 +57,42 @@ class Oid563 extends AbstractOid
 		$random = static::getRandom();
 		$sequence = static::getSequence();
 		/* 5-byte time */
-		$id .= static::$hex[($time >> 32) & 0xff];
-		$id .= static::$hex[($time >> 24) & 0xff];
-		$id .= static::$hex[($time >> 16) & 0xff];
-		$id .= static::$hex[($time >> 8) & 0xff];
-		$id .= static::$hex[$time & 0xff];
+		$id .= static::$hexTable[($time >> 32) & 0xff];
+		$id .= static::$hexTable[($time >> 24) & 0xff];
+		$id .= static::$hexTable[($time >> 16) & 0xff];
+		$id .= static::$hexTable[($time >> 8) & 0xff];
+		$id .= static::$hexTable[$time & 0xff];
 		/* 6-byte random */
-		$id .= static::$hex[$random[0]];
-		$id .= static::$hex[$random[1]];
-		$id .= static::$hex[$random[2]];
-		$id .= static::$hex[$random[3]];
-		$id .= static::$hex[$random[4]];
-		$id .= static::$hex[$random[5]];
+		$id .= static::$hexTable[$random[1]];
+		$id .= static::$hexTable[$random[2]];
+		$id .= static::$hexTable[$random[3]];
+		$id .= static::$hexTable[$random[4]];
+		$id .= static::$hexTable[$random[5]];
+		$id .= static::$hexTable[$random[6]];
 		/* 3-byte sequence */
-		$id .= static::$hex[($sequence >> 16) & 0xff];
-		$id .= static::$hex[($sequence >> 8) & 0xff];
-		$id .= static::$hex[$sequence & 0xff];
+		$id .= static::$hexTable[($sequence >> 16) & 0xff];
+		$id .= static::$hexTable[($sequence >> 8) & 0xff];
+		$id .= static::$hexTable[$sequence & 0xff];
 		return $id;
+	}
+
+	/**
+	 * @return array
+	 */
+	protected static function getRandom(): array{
+		if (static::$random === null) {
+			static::$random = unpack('C*', random_bytes(6));
+		}
+		return static::$random;
+	}
+
+	/**
+	 * @return int
+	 */
+	protected static function getSequence(): int{
+		if (static::$sequence === null) {
+			static::$sequence = rand(0, 0xffffff);
+		}
+		return static::$sequence = (static::$sequence + 1) % 0xffffff;
 	}
 }

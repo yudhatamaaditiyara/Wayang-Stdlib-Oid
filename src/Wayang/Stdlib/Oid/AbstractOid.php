@@ -31,12 +31,22 @@ abstract class AbstractOid implements OidInterface
 	/**
 	 * @var int
 	 */
-	protected $timestamps;
+	protected $byteSize;
+
+	/**
+	 * @var int
+	 */
+	protected $charSize;
+
+	/**
+	 * @var int
+	 */
+	protected $timestamp;
 
 	/**
 	 * @var array
 	 */
-	protected static $hex = [
+	protected static $hexTable = [
 		'00','01','02','03','04','05','06','07','08','09','0a','0b','0c','0d','0e','0f',
 		'10','11','12','13','14','15','16','17','18','19','1a','1b','1c','1d','1e','1f',
 		'20','21','22','23','24','25','26','27','28','29','2a','2b','2c','2d','2e','2f',
@@ -54,31 +64,6 @@ abstract class AbstractOid implements OidInterface
 		'e0','e1','e2','e3','e4','e5','e6','e7','e8','e9','ea','eb','ec','ed','ee','ef',
 		'f0','f1','f2','f3','f4','f5','f6','f7','f8','f9','fa','fb','fc','fd','fe','ff',
 	];
-
-	/**
-	 * @var array
-	 */
-	protected static $random;
-
-	/**
-	 * @var int
-	 */
-	protected static $sequence;
-
-	/**
-	 * @var int
-	 */
-	protected static $timeLength;
-
-	/**
-	 * @var int
-	 */
-	protected static $randomLength;
-
-	/**
-	 * @var int
-	 */
-	protected static $sequenceLength;
 
 	/**
 	 * @param string|OidInterface $id
@@ -101,11 +86,25 @@ abstract class AbstractOid implements OidInterface
 	/**
 	 * @return int
 	 */
-	public function getTimestamps(): int{
-		if ($this->timestamps === null) {
-			$this->timestamps = hexdec(substr($this->id, 0, static::$timeLength));
+	public function getByteSize(): int{
+		return $this->byteSize;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getCharSize(): int{
+		return $this->charSize;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getTimestamp(): int{
+		if ($this->timestamp === null) {
+			$this->timestamp = hexdec(substr($this->id, 0, $this->byteSize - 4));
 		}
-		return $this->timestamps;
+		return $this->timestamp;
 	}
 
 	/**
@@ -136,25 +135,5 @@ abstract class AbstractOid implements OidInterface
 	 */
 	public static function generate(int $time): string{
 		throw new BadMethodCallException('Not Implemented');
-	}
-
-	/**
-	 * @return array
-	 */
-	protected static function getRandom(): array{
-		if (static::$random === null) {
-			static::$random = array_values(unpack('C*', random_bytes(static::$randomLength)));
-		}
-		return static::$random;
-	}
-
-	/**
-	 * @return int
-	 */
-	protected static function getSequence(): int{
-		if (static::$sequence === null) {
-			static::$sequence = rand(0, static::$sequenceLength);
-		}
-		return static::$sequence = (static::$sequence + 1) % static::$sequenceLength;
 	}
 }

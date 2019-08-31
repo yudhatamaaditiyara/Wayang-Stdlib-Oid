@@ -28,5 +28,5 @@ interface OidInterface
 	/**
 	 * @return int
 	 */
-	public function getTimestamps(): int;
+	public function getTimestamp(): int;
 }
