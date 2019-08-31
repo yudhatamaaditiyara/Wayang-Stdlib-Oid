@@ -18,7 +18,7 @@ namespace Wayang\Stdlib\Oid;
 
 /**
  */
-class Oid453 extends AbstractOid
+class Oid563 extends AbstractOid
 {
 	/**
 	 * @var array
@@ -33,12 +33,12 @@ class Oid453 extends AbstractOid
 	/**
 	 * @var int
 	 */
-	protected static $timeLength = 8;
+	protected static $timeLength = 10;
 
 	/**
 	 * @var int
 	 */
-	protected static $randomLength = 5;
+	protected static $randomLength = 6;
 
 	/**
 	 * @var int
@@ -50,7 +50,7 @@ class Oid453 extends AbstractOid
 	 * @return bool
 	 */
 	public static function validate($id): bool{
-		return preg_match('/^[0-9a-f]{24}$/', (string)$id);
+		return preg_match('/^[0-9a-f]{28}$/', (string)$id);
 	}
 
 	/**
@@ -61,17 +61,19 @@ class Oid453 extends AbstractOid
 		$id = '';
 		$random = static::getRandom();
 		$sequence = static::getSequence();
-		/* 4-byte time */
+		/* 5-byte time */
+		$id .= static::$hex[($time >> 32) & 0xff];
 		$id .= static::$hex[($time >> 24) & 0xff];
 		$id .= static::$hex[($time >> 16) & 0xff];
 		$id .= static::$hex[($time >> 8) & 0xff];
 		$id .= static::$hex[$time & 0xff];
-		/* 5-byte random */
+		/* 6-byte random */
 		$id .= static::$hex[$random[0]];
 		$id .= static::$hex[$random[1]];
 		$id .= static::$hex[$random[2]];
 		$id .= static::$hex[$random[3]];
 		$id .= static::$hex[$random[4]];
+		$id .= static::$hex[$random[5]];
 		/* 3-byte sequence */
 		$id .= static::$hex[($sequence >> 16) & 0xff];
 		$id .= static::$hex[($sequence >> 8) & 0xff];

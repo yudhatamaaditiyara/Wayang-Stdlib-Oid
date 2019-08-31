@@ -36,7 +36,7 @@ abstract class AbstractOid implements OidInterface
 	/**
 	 * @var array
 	 */
-	protected static $hexMap = [
+	protected static $hex = [
 		'00','01','02','03','04','05','06','07','08','09','0a','0b','0c','0d','0e','0f',
 		'10','11','12','13','14','15','16','17','18','19','1a','1b','1c','1d','1e','1f',
 		'20','21','22','23','24','25','26','27','28','29','2a','2b','2c','2d','2e','2f',
@@ -56,6 +56,31 @@ abstract class AbstractOid implements OidInterface
 	];
 
 	/**
+	 * @var array
+	 */
+	protected static $random;
+
+	/**
+	 * @var int
+	 */
+	protected static $sequence;
+
+	/**
+	 * @var int
+	 */
+	protected static $timeLength;
+
+	/**
+	 * @var int
+	 */
+	protected static $randomLength;
+
+	/**
+	 * @var int
+	 */
+	protected static $sequenceLength;
+
+	/**
 	 * @param string $id
 	 * @throws InvalidArgumentException
 	 */
@@ -71,6 +96,16 @@ abstract class AbstractOid implements OidInterface
 	 */
 	public function getId(): string{
 		return $this->id;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getTimestamps(): int{
+		if ($this->timestamps === null) {
+			$this->timestamps = hexdec(substr($this->id, 0, static::$timeLength));
+		}
+		return $this->timestamps;
 	}
 
 	/**
@@ -101,5 +136,25 @@ abstract class AbstractOid implements OidInterface
 	 */
 	public static function generate(int $time): string{
 		throw new BadMethodCallException('Not Implemented');
+	}
+
+	/**
+	 * @return array
+	 */
+	protected static function getRandom(): array{
+		if (static::$random === null) {
+			static::$random = array_values(unpack('C*', random_bytes(static::$randomLength)));
+		}
+		return static::$random;
+	}
+
+	/**
+	 * @return int
+	 */
+	protected static function getSequence(): int{
+		if (static::$sequence === null) {
+			static::$sequence = rand(0, static::$sequenceLength);
+		}
+		return static::$sequence = (static::$sequence + 1) % static::$sequenceLength;
 	}
 }
