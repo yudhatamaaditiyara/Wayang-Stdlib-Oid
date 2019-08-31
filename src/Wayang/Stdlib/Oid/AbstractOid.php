@@ -81,10 +81,10 @@ abstract class AbstractOid implements OidInterface
 	protected static $sequenceLength;
 
 	/**
-	 * @param string $id
+	 * @param string|OidInterface $id
 	 * @throws InvalidArgumentException
 	 */
-	public function __construct(string $id) {
+	public function __construct($id) {
 		if (!static::validate($id)) {
 			throw new InvalidArgumentException('Invalid ID');
 		}
