@@ -1,6 +1,7 @@
 language: php
 php:
   - "7.2"
+  - "7.3"
 install:
   - mkdir -p build/logs 
   - composer install --no-interaction --ignore-platform-reqs
