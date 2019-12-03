@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Wayang\\Stdlib\\Oid\\": "src/Wayang/Stdlib/Oid"
+            "Wayang\\Stdlib\\Oid\\": "src/"
         }
     },
     "scripts": {
