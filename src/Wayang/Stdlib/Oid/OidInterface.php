@@ -20,13 +20,13 @@ namespace Wayang\Stdlib\Oid;
  */
 interface OidInterface
 {
-	/**
-	 * @return string
-	 */
-	public function getId(): string;
+    /**
+     * @return string
+     */
+    public function getId(): string;
 
-	/**
-	 * @return int
-	 */
-	public function getTimestamp(): int;
+    /**
+     * @return int
+     */
+    public function getTimestamp(): int;
 }
