@@ -1,0 +1,10 @@
+language: php
+php:
+  - "7.1"
+install:
+  - mkdir -p build/logs 
+  - composer install --no-interaction --ignore-platform-reqs
+script:
+  - composer test-coverage
+after_success:
+  - composer test-coverage-report

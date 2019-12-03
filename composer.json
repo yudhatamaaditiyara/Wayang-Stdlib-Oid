@@ -4,12 +4,21 @@
     "type": "library",
     "license": "Apache-2.0",
     "require": {
-    	"php": "^7.1.3",
+        "php": "^7.1.3",
         "wayang/exception-spl": "^1.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.4.3",
+        "php-coveralls/php-coveralls": "^2.2.0"
     },
     "autoload": {
         "psr-4": {
             "Wayang\\Stdlib\\Oid\\": "src/Wayang/Stdlib/Oid"
         }
+    },
+    "scripts": {
+        "test": "phpunit --coverage-text --configuration=./test/phpunit.xml",
+        "test-coverage": "phpunit --coverage-clover=./build/logs/clover.xml --configuration=./test/phpunit.xml",
+        "test-coverage-report": "php-coveralls -v"
     }
 }
