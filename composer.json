@@ -17,8 +17,8 @@
         }
     },
     "scripts": {
-        "test": "phpunit --coverage-text --configuration=./test/phpunit.xml",
-        "test-coverage": "phpunit --coverage-clover=./build/logs/clover.xml --configuration=./test/phpunit.xml",
+        "test": "phpunit --coverage-text --configuration=test/phpunit.xml",
+        "test-coverage": "phpunit --coverage-clover=build/logs/clover.xml --configuration=test/phpunit.xml",
         "test-coverage-report": "php-coveralls -v"
     },
     "config": {
