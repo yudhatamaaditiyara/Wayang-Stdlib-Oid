@@ -19,8 +19,6 @@ namespace Wayang\Stdlib\Oid;
 use PHPUnit\Framework\TestCase;
 use Wayang\Exception\Spl\InvalidArgumentException;
 
-/**
- */
 class Oid453Test extends TestCase
 {
     public function testConstructor(){

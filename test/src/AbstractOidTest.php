@@ -19,8 +19,6 @@ namespace Wayang\Stdlib\Oid;
 use PHPUnit\Framework\TestCase;
 use Wayang\Exception\Spl\BadMethodCallException;
 
-/**
- */
 class AbstractOidTest extends TestCase
 {
     public function testValidate(){
