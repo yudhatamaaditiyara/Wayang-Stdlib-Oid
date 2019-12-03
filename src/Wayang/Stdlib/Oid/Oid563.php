@@ -57,7 +57,7 @@ class Oid563 extends AbstractOid
         $random = static::getRandom();
         $sequence = static::getSequence();
         /* 5-byte time */
-        $id .= static::$hexTable[($time >> 32) & 0xff];
+        $id .= static::$hexTable[($time / 0x100000000) & 0xff];
         $id .= static::$hexTable[($time >> 24) & 0xff];
         $id .= static::$hexTable[($time >> 16) & 0xff];
         $id .= static::$hexTable[($time >> 8) & 0xff];
