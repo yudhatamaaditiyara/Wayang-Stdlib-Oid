@@ -4,7 +4,7 @@ php:
   - "7.3"
 install:
   - mkdir -p build/logs 
-  - composer install --no-interaction --ignore-platform-reqs
+  - composer install --no-interaction
 script:
   - composer test-coverage
 after_success:
