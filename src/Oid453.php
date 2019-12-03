@@ -49,18 +49,18 @@ class Oid453 extends AbstractOid
     }
 
     /**
-     * @param int $time
+     * @param int $timestamp
      * @return string
      */
-    public static function generate(int $time): string{
+    public static function generate(int $timestamp): string{
         $id = '';
         $random = static::getRandom();
         $sequence = static::getSequence();
         /* 4-byte time */
-        $id .= static::$hexTable[($time >> 24) & 0xff];
-        $id .= static::$hexTable[($time >> 16) & 0xff];
-        $id .= static::$hexTable[($time >> 8) & 0xff];
-        $id .= static::$hexTable[$time & 0xff];
+        $id .= static::$hexTable[($timestamp >> 24) & 0xff];
+        $id .= static::$hexTable[($timestamp >> 16) & 0xff];
+        $id .= static::$hexTable[($timestamp >> 8) & 0xff];
+        $id .= static::$hexTable[$timestamp & 0xff];
         /* 5-byte random */
         $id .= static::$hexTable[$random[1]];
         $id .= static::$hexTable[$random[2]];
