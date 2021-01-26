@@ -1,0 +1,74 @@
+name: ci
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: test - php ${{matrix.php}} - ${{matrix.os}}
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        php: ['7.2', '7.3', '7.4', '8.0']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Setup php ${{matrix.php}}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{matrix.php}}
+          coverage: xdebug
+
+      - name: Get composer cache directory
+        id: composercache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{steps.composercache.outputs.dir}}
+          key: ${{runner.os}}-composer-${{hashFiles('**/composer.json')}}
+          restore-keys: ${{runner.os}}-composer-
+
+      - run: composer install --no-progress --prefer-dist
+      - run: composer run test
+
+  coverage:
+    name: coverage
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Setup php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          coverage: xdebug
+
+      - name: Get composer cache directory
+        id: composercache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{steps.composercache.outputs.dir}}
+          key: ${{runner.os}}-composer-${{hashFiles('**/composer.json')}}
+          restore-keys: ${{runner.os}}-composer-
+
+      - run: composer install --no-progress --prefer-dist
+      - run: composer run coverage
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v1
+        with:
+          name: coverage
+          flags: unittests
+          token: ${{secrets.CODECOV_TOKEN}}
+          file: ./build/coverage/coverage-clover.xml
+          path_to_write_report: ./build/coverage/coverage-clover.gz
+          fail_ci_if_error: true
+          verbose: true

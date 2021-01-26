@@ -1,8 +1,7 @@
 # Wayang-Stdlib-Oid
-[![Packagist Version](https://img.shields.io/packagist/v/wayang/stdlib-oid)](https://packagist.org/packages/wayang/stdlib-oid)
-[![Build Status](https://travis-ci.org/yudhatamaaditiyara/Wayang-Stdlib-Oid.svg?branch=master)](https://travis-ci.org/yudhatamaaditiyara/Wayang-Stdlib-Oid)
-[![Coverage Status](https://coveralls.io/repos/github/yudhatamaaditiyara/Wayang-Stdlib-Oid/badge.svg?branch=master)](https://coveralls.io/github/yudhatamaaditiyara/Wayang-Stdlib-Oid?branch=master)
-[![License](https://img.shields.io/packagist/l/wayang/stdlib-oid)](https://github.com/yudhatamaaditiyara/Wayang-Stdlib-Oid/blob/master/LICENSE)
+[![packagist](https://img.shields.io/packagist/v/wayang/stdlib-oid)](https://packagist.org/packages/wayang/stdlib-oid)
+[![ci](https://github.com/yudhatamaaditiyara/Wayang-Stdlib-Oid/workflows/ci/badge.svg?branch=master)](https://github.com/yudhatamaaditiyara/Wayang-Stdlib-Oid/actions)
+[![codecov](https://codecov.io/gh/yudhatamaaditiyara/Wayang-Stdlib-Oid/branch/master/graph/badge.svg?token=VMKVmzXGqU)](https://codecov.io/gh/yudhatamaaditiyara/Wayang-Stdlib-Oid)
 
 ## Installing
 ```

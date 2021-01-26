@@ -1,108 +1,130 @@
-<?php
+<?php declare(strict_types=1);
 /**
- * Copyright (C) 2019 Yudha Tama Aditiyara
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2019 Yudha Tama Aditiyara
+ * SPDX-License-Identifier: Apache-2.0
  */
-namespace Wayang\Stdlib\Oid;
+namespace WayangTest\Stdlib\Oid;
 
+use Throwable;
+use ReflectionClass;
 use PHPUnit\Framework\TestCase;
-use Wayang\Exception\Spl\InvalidArgumentException;
+use Wayang\Stdlib\Oid\Oid453;
+use Wayang\Stdlib\Oid\AbstractOid;
+use Wayang\Stdlib\Oid\Exception\OidException;
 
 class Oid453Test extends TestCase
 {
-    public function testConstructor(){
-        $id = Oid453::generate(time());
-        $object = new Oid453($id);
-        $this->assertEquals($object->getId(), $id);
-    }
+  const MIN_ID = '000000000000000000000000';
+  const MAX_ID = 'ffffffffffffffffffffffff';
+  const INVALID_HEX_CHARACTER_ID = 'ghijklmn0000000000000000';
+  const INVALID_HEX_INSENSITIVE_ID = 'FFFFFFFF0000000000000000';
+  const MIN_TIMESTAMP = 0;
+  const MAX_TIMESTAMP = 0xffffffff;
 
-    public function testConstructorThrowInvalidArgumentException(){
-        try {
-            new Oid453(Oid563::generate(time()));
-            $this->assertTrue(false);
-        } catch (InvalidArgumentException $e) {
-            $this->assertTrue(true);
-        }
-    }
+  public function testMustBeClass(){
+    $rc = new ReflectionClass(Oid453::class);
+    $this->assertFalse($rc->isTrait());
+    $this->assertFalse($rc->isInterface());
+  }
 
-    public function testCreate(){
-        $object = Oid453::create();
-        $this->assertTrue($object instanceof OidInterface);
-    }
+  public function testMustBeSubclassOfAbstractOid(){
+    $rc = new ReflectionClass(Oid453::class);
+    $this->assertTrue($rc->isSubclassOf(AbstractOid::class));
+  }
 
-    public function testValidate(){
-        $this->assertTrue(Oid453::validate(Oid453::create()));
-    }
+  public function testCreate(){
+    $timestamp = time();
+    $oid = Oid453::create();
+    $this->assertGreaterThanOrEqual($oid->getTimestamp(), $timestamp);
+  }
 
-    public function testValidateInvalid(){
-        $this->assertTrue(!Oid453::validate(Oid563::generate(time())));
-    }
+  public function testCreateFromString(){
+    $oid = Oid453::createFromString(static::MIN_ID);
+    $this->assertEquals($oid->getId(), static::MIN_ID);
+  }
 
-    public function testGenerate(){
-        $time = (2 ** 32) - 1;
-        $this->assertEquals(hexdec(substr(Oid453::generate($time), 0, 8)), $time);
-    }
+  public function testCreateFromTimestamp(){
+    $oid = Oid453::createFromTimestamp(static::MAX_TIMESTAMP);
+    $this->assertEquals($oid->getTimestamp(), static::MAX_TIMESTAMP);
+  }
 
-    public function testGenerateUint8(){
-        $time = (2 ** 8) - 1;
-        $this->assertEquals(hexdec(substr(Oid453::generate($time), 0, 8)), $time);
-    }
+  public function testGenerate(){
+    $timestamp = time();
+    $oid = new Oid453(Oid453::generate($timestamp));
+    $this->assertEquals($oid->getTimestamp(), $timestamp);
+  }
 
-    public function testGenerateUint16(){
-        $time = (2 ** 16) - 1;
-        $this->assertEquals(hexdec(substr(Oid453::generate($time), 0, 8)), $time);
-    }
+  public function testMinId(){
+    $oid = Oid453::createFromString(static::MIN_ID);
+    $this->assertEquals($oid->getId(), static::MIN_ID);
+    $this->assertEquals($oid->getByteSize(), 12);
+    $this->assertEquals($oid->getCharSize(), 24);
+    $this->assertEquals($oid->getTimestamp(), static::MIN_TIMESTAMP);
+    $this->assertEquals((string)$oid, static::MIN_ID);
+  }
 
-    public function testGenerateUint24(){
-        $time = (2 ** 24) - 1;
-        $this->assertEquals(hexdec(substr(Oid453::generate($time), 0, 8)), $time);
-    }
+  public function testMaxId(){
+    $oid = Oid453::createFromString(static::MAX_ID);
+    $this->assertEquals($oid->getId(), static::MAX_ID);
+    $this->assertEquals($oid->getByteSize(), 12);
+    $this->assertEquals($oid->getCharSize(), 24);
+    $this->assertEquals($oid->getTimestamp(), static::MAX_TIMESTAMP);
+    $this->assertEquals((string)$oid, static::MAX_ID);
+  }
 
-    public function testGenerateUint32(){
-        $time = (2 ** 32) - 1;
-        $this->assertEquals(hexdec(substr(Oid453::generate($time), 0, 8)), $time);
+  public function testInvalidHexCharacterId(){
+    try {
+      Oid453::createFromString(static::INVALID_HEX_CHARACTER_ID);
+    } catch (Throwable $e) {
+      $this->assertInstanceOf(OidException::class, $e);
+      return;
     }
+    $this->assertTrue(false);
+  }
 
-    public function testGenerateUint40(){
-        $uint32 = (2 ** 32) - 1;
-        $uint40 = (2 ** 40) - 1;
-        $this->assertEquals(hexdec(substr(Oid453::generate($uint40), 0, 8)), $uint32);
+  public function testInvalidHexInsensitiveId(){
+    try {
+      Oid453::createFromString(static::INVALID_HEX_INSENSITIVE_ID);
+    } catch (Throwable $e) {
+      $this->assertInstanceOf(OidException::class, $e);
+      return;
     }
+    $this->assertTrue(false);
+  }
 
-    public function testGetId(){
-        $object = Oid453::create();
-        $this->assertTrue(Oid453::validate($object->getId()));
-    }
+  public function testTimestampUint8(){
+    $timestamp = (2 ** 8) - 1;
+    $oid = Oid453::createFromTimestamp($timestamp);
+    $this->assertEquals($oid->getTimestamp(), $timestamp);
+  }
 
-    public function testGetTimestamp(){
-        $time = (2 ** 32) - 1;
-        $object = new Oid453(Oid453::generate($time));
-        $this->assertEquals($object->getTimestamp(), $time);
-    }
+  public function testTimestampUint16(){
+    $timestamp = (2 ** 16) - 1;
+    $oid = Oid453::createFromTimestamp($timestamp);
+    $this->assertEquals($oid->getTimestamp(), $timestamp);
+  }
 
-    public function testGetByteSize(){
-        $object = Oid453::create();
-        $this->assertEquals($object->getByteSize(), 12);
-    }
+  public function testTimestampUint24(){
+    $timestamp = (2 ** 24) - 1;
+    $oid = Oid453::createFromTimestamp($timestamp);
+    $this->assertEquals($oid->getTimestamp(), $timestamp);
+  }
 
-    public function testGetCharSize(){
-        $object = Oid453::create();
-        $this->assertEquals($object->getCharSize(), 24);
-    }
+  public function testTimestampUint32(){
+    $timestamp = (2 ** 32) - 1;
+    $oid = Oid453::createFromTimestamp($timestamp);
+    $this->assertEquals($oid->getTimestamp(), $timestamp);
+  }
 
-    public function testToString(){
-        $object = Oid453::create();
-        $this->assertEquals((string)$object, $object->getId());
-    }
+  public function testTimestampUint40(){
+    $timestamp = (2 ** 40) - 1;
+    $oid = Oid453::createFromTimestamp($timestamp);
+    $this->assertEquals($oid->getTimestamp(), static::MAX_TIMESTAMP);
+  }
+
+  public function testTimestampUint48(){
+    $timestamp = (2 ** 48) - 1;
+    $oid = Oid453::createFromTimestamp($timestamp);
+    $this->assertEquals($oid->getTimestamp(), static::MAX_TIMESTAMP);
+  }
 }

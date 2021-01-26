@@ -1,41 +1,52 @@
-<?php
+<?php declare(strict_types=1);
 /**
- * Copyright (C) 2019 Yudha Tama Aditiyara
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2019 Yudha Tama Aditiyara
+ * SPDX-License-Identifier: Apache-2.0
  */
-namespace Wayang\Stdlib\Oid;
+namespace WayangTest\Stdlib\Oid;
 
+use Throwable;
+use ReflectionClass;
 use PHPUnit\Framework\TestCase;
-use Wayang\Exception\Spl\BadMethodCallException;
+use Wayang\Stdlib\Oid\AbstractOid;
+use Wayang\Stdlib\Oid\OidInterface;
+use Wayang\Stdlib\Oid\Exception\BadMethodCallException;
 
 class AbstractOidTest extends TestCase
 {
-    public function testValidate(){
-        try {
-            AbstractOid::validate("");
-            $this->assertTrue(false);
-        } catch (BadMethodCallException $e) {
-            $this->assertTrue(true);
-        }
-    }
+  public function testMustBeClass(){
+    $rc = new ReflectionClass(AbstractOid::class);
+    $this->assertFalse($rc->isTrait());
+    $this->assertFalse($rc->isInterface());
+  }
 
-    public function testGenerate(){
-        try {
-            AbstractOid::generate(0);
-            $this->assertTrue(false);
-        } catch (BadMethodCallException $e) {
-            $this->assertTrue(true);
-        }
+  public function testMustBeAbstractClass(){
+    $rc = new ReflectionClass(AbstractOid::class);
+    $this->assertTrue($rc->isAbstract());
+  }
+
+  public function testMustBeImplemetsOidInterface(){
+    $rc = new ReflectionClass(AbstractOid::class);
+    $this->assertTrue($rc->implementsInterface(OidInterface::class));
+  }
+
+  public function testValidateMustBeThrowBadMethodCallException(){
+    try {
+      AbstractOid::validate('');
+    } catch (Throwable $e) {
+      $this->assertInstanceOf(BadMethodCallException::class, $e);
+      return;
     }
+    $this->assertTrue(false);
+  }
+
+  public function testGenerateMustBeThrowBadMethodCallException(){
+    try {
+      AbstractOid::generate(0);
+    } catch (Throwable $e) {
+      $this->assertInstanceOf(BadMethodCallException::class, $e);
+      return;
+    }
+    $this->assertTrue(false);
+  }
 }
