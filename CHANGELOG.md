@@ -1,4 +1,5 @@
 # 1.1.0 - 2021-01-27
+
 - feat: add module `Wayang\Stdlib\Oid\Exception`
 - feat: add static method `createFromString` and `createFromTimestamp`
 - feat: add subclass interface `Wayang\Stdlib\StringableInterface` to `Wayang\Stdlib\Oid\OidInterface`
