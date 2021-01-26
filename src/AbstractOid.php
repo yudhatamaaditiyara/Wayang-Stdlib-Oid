@@ -94,7 +94,7 @@ abstract class AbstractOid implements OidInterface
   /**
    * @return string
    */
-  public function __toString(){
+  public function __toString(): string{
     return $this->id;
   }
 
