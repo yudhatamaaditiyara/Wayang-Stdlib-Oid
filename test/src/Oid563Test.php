@@ -17,7 +17,7 @@ class Oid563Test extends TestCase
   const MIN_ID = '0000000000000000000000000000';
   const MAX_ID = 'ffffffffffffffffffffffffffff';
   const INVALID_HEX_CHARACTER_ID = 'ghijklmn00000000000000000000';
-  const INVALID_HEX_INSENSITIVE_ID = 'FFFFFFFF00000000000000000000';
+  const INVALID_HEX_SENSITIVE_ID = 'FFFFFFFF00000000000000000000';
   const MIN_TIMESTAMP = 0;
   const MAX_TIMESTAMP = 0xffffffffff;
 
@@ -82,9 +82,9 @@ class Oid563Test extends TestCase
     $this->assertTrue(false);
   }
 
-  public function testInvalidHexInsensitiveId(){
+  public function testInvalidHexSensitiveId(){
     try {
-      Oid563::createFromString(static::INVALID_HEX_INSENSITIVE_ID);
+      Oid563::createFromString(static::INVALID_HEX_SENSITIVE_ID);
     } catch (Throwable $e) {
       $this->assertInstanceOf(OidException::class, $e);
       return;
