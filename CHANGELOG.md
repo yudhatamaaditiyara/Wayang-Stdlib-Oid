@@ -1,3 +1,8 @@
+# 1.1.1 - 2021-01-28
+
+- fix: add return type
+- docs: update `CHANGELOG.md`
+
 # 1.1.0 - 2021-01-27
 
 - feat: add class `Wayang\Stdlib\Oid\Exception\OidException`
